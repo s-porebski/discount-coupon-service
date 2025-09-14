@@ -24,8 +24,8 @@ public class Coupon {
     @Column(name = "current_uses", nullable = false)
     private Integer currentUses;
 
-    @Column(name = "country", nullable = false, length = 2)
-    private String country;
+    @Column(name = "country_code", nullable = false, length = 2)
+    private String countryCode;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

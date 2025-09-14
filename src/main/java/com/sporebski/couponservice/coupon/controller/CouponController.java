@@ -3,6 +3,7 @@ package com.sporebski.couponservice.coupon.controller;
 import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
 import com.sporebski.couponservice.coupon.service.CouponService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class CouponController {
     private final CouponService couponService;
 
     @PostMapping("/create")
-    public ResponseEntity<CouponResponse> createCoupon(@RequestBody CreateCouponRequest request) {
+    public ResponseEntity<CouponResponse> createCoupon(@Valid @RequestBody CreateCouponRequest request) {
         return ResponseEntity.ok(couponService.createCoupon(request));
     }
 }
