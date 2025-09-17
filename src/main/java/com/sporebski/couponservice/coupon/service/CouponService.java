@@ -1,8 +1,10 @@
 package com.sporebski.couponservice.coupon.service;
 
 import com.sporebski.couponservice.common.exception.ApiBusinessException;
+import com.sporebski.couponservice.common.exception.NotFoundException;
 import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
+import com.sporebski.couponservice.coupon.dto.UseCouponRequest;
 import com.sporebski.couponservice.coupon.model.Coupon;
 import com.sporebski.couponservice.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,18 @@ public class CouponService {
         coupon.setCountryCode(couponRequest.getCountryCode());
 
         return mapCouponResponse(couponRepository.save(coupon));
+    }
+
+    public void useCoupon(UseCouponRequest couponRequest) {
+        String normalizedCode = couponRequest.getCode().toUpperCase();
+
+        Coupon coupon = couponRepository.findByCode(normalizedCode)
+                .orElseThrow(() -> new NotFoundException("Coupon code does not exist"));
+        int updatedRows = couponRepository.incrementUsageIfNotExceeded(normalizedCode);
+
+        if (updatedRows == 0) {
+            throw new ApiBusinessException("Coupon usage limit exceeded");
+        }
     }
 
     private CouponResponse mapCouponResponse(Coupon coupon) {

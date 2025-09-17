@@ -2,6 +2,7 @@ package com.sporebski.couponservice.coupon.controller;
 
 import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
+import com.sporebski.couponservice.coupon.dto.UseCouponRequest;
 import com.sporebski.couponservice.coupon.service.CouponService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,15 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<CouponResponse> createCoupon(@Valid @RequestBody CreateCouponRequest request) {
         return ResponseEntity.ok(couponService.createCoupon(request));
+    }
+
+    @PostMapping("/usage")
+    public ResponseEntity<Void> useCoupon(@Valid @RequestBody UseCouponRequest request) {
+        couponService.useCoupon(request);
+
+        return ResponseEntity.ok().build();
     }
 }

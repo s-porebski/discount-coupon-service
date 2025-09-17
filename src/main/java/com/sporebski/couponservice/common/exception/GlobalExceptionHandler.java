@@ -48,4 +48,18 @@ public class GlobalExceptionHandler {
                         .build()
                 );
     }
+
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception, HttpServletRequest request) {
+        return ResponseEntity
+                .badRequest()
+                .body(ErrorResponse.builder()
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+                        .message(exception.getMessage())
+                        .path(request.getRequestURI())
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .timestamp(System.currentTimeMillis())
+                        .build()
+                );
+    }
 }
