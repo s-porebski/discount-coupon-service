@@ -1,22 +1,19 @@
 package com.sporebski.couponservice.geolocation.service;
 
 import com.sporebski.couponservice.coupon.service.GeolocationService;
-import com.sporebski.couponservice.geolocation.dto.IpApiGeolocationResponse;
+import com.sporebski.couponservice.geolocation.IpApiGeolocationClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 
 @Service
+@RequiredArgsConstructor
 public class IpApiGeolocationService implements GeolocationService {
 
-    private final RestClient restClient = RestClient.create();
+    private final IpApiGeolocationClient ipApiGeolocationClient;
 
     @Override
     public String getCountryCode(String ipAddress) {
-        IpApiGeolocationResponse result = restClient.get()
-                .uri("http://ip-api.com/json/{ipAddress}", ipAddress)
-                .retrieve()
-                .body(IpApiGeolocationResponse.class);
-
-        return result.getCountryCode();
+        return ipApiGeolocationClient.fetchGeolocation(ipAddress)
+                .getCountryCode();
     }
 }
