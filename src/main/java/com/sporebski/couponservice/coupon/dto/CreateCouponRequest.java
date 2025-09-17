@@ -1,6 +1,6 @@
 package com.sporebski.couponservice.coupon.dto;
 
-import com.sporebski.couponservice.common.exception.validation.CountryCode;
+import com.sporebski.couponservice.common.validation.CountryCode;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.sporebski.couponservice.common.exception.validation;
+package com.sporebski.couponservice.common.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
