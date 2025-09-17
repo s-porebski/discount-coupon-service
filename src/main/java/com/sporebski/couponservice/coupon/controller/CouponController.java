@@ -4,6 +4,7 @@ import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
 import com.sporebski.couponservice.coupon.dto.UseCouponRequest;
 import com.sporebski.couponservice.coupon.service.CouponService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class CouponController {
     }
 
     @PostMapping("/usage")
-    public ResponseEntity<Void> useCoupon(@Valid @RequestBody UseCouponRequest request) {
-        couponService.useCoupon(request);
+    public ResponseEntity<Void> useCoupon(@Valid @RequestBody UseCouponRequest useCouponRequest, HttpServletRequest httpServletRequest) {
+        couponService.useCoupon(useCouponRequest, httpServletRequest);
 
         return ResponseEntity.ok().build();
     }
