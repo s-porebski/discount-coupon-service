@@ -1,7 +1,7 @@
 package com.sporebski.couponservice.coupon.service;
 
 import com.sporebski.couponservice.common.exception.ApiBusinessException;
-import com.sporebski.couponservice.common.exception.NotFoundException;
+import com.sporebski.couponservice.common.exception.CouponErrorCode;
 import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
 import com.sporebski.couponservice.coupon.dto.UseCouponRequest;
@@ -136,7 +136,9 @@ class CouponServiceTest {
             request.setCode("DISCOUNT10");
             when(couponRepository.findByCode("DISCOUNT10")).thenReturn(Optional.empty());
 
-            assertThrows(NotFoundException.class, () -> couponService.useCoupon(request, httpServletRequest));
+            ApiBusinessException apiBusinessException = assertThrows(ApiBusinessException.class, () -> couponService.useCoupon(request, httpServletRequest));
+
+            assertEquals(CouponErrorCode.COUPON_NOT_FOUND, apiBusinessException.getErrorCode());
         }
 
     }

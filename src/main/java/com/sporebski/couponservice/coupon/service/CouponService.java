@@ -1,7 +1,7 @@
 package com.sporebski.couponservice.coupon.service;
 
 import com.sporebski.couponservice.common.exception.ApiBusinessException;
-import com.sporebski.couponservice.common.exception.NotFoundException;
+import com.sporebski.couponservice.common.exception.CouponErrorCode;
 import com.sporebski.couponservice.coupon.dto.CouponResponse;
 import com.sporebski.couponservice.coupon.dto.CreateCouponRequest;
 import com.sporebski.couponservice.coupon.dto.UseCouponRequest;
@@ -23,7 +23,7 @@ public class CouponService {
         String normalizedCode = couponRequest.getCode().toUpperCase();
 
         if (couponRepository.existsByCode(normalizedCode)) {
-            throw new ApiBusinessException("Coupon code already exists");
+            throw new ApiBusinessException(CouponErrorCode.COUPON_CODE_ALREADY_EXISTS);
         }
         Coupon coupon = new Coupon();
         coupon.setCode(normalizedCode);
@@ -37,15 +37,15 @@ public class CouponService {
     public void useCoupon(UseCouponRequest couponRequest, HttpServletRequest httpRequest) {
         String normalizedCode = couponRequest.getCode().toUpperCase();
         Coupon coupon = couponRepository.findByCode(normalizedCode)
-                .orElseThrow(() -> new NotFoundException("Coupon code does not exist"));
+                .orElseThrow(() -> new ApiBusinessException(CouponErrorCode.COUPON_NOT_FOUND));
 
         if (!isUserCountryValidForCoupon(httpRequest, coupon)) {
-            throw new ApiBusinessException("Coupon not valid in your country");
+            throw new ApiBusinessException(CouponErrorCode.COUPON_COUNTRY_NOT_ALLOWED);
         }
         int updatedRows = couponRepository.incrementUsageIfNotExceeded(normalizedCode);
 
         if (updatedRows == 0) {
-            throw new ApiBusinessException("Coupon usage limit exceeded");
+            throw new ApiBusinessException(CouponErrorCode.COUPON_USAGE_LIMIT_EXCEEDED);
         }
     }
 

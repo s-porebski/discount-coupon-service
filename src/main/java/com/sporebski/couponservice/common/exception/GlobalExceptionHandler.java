@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(ErrorResponse.builder()
                         .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                        .message("Invalid request data")
+                        .message("Invalid request data.")
                         .path(request.getRequestURI())
                         .status(HttpStatus.BAD_REQUEST.value())
                         .details(errors)
@@ -40,24 +40,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .badRequest()
                 .body(ErrorResponse.builder()
-                        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                        .message(exception.getMessage())
+                        .error(exception.getErrorCode().getStatus().getReasonPhrase())
+                        .message(exception.getErrorCode().getMessage())
                         .path(request.getRequestURI())
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .timestamp(System.currentTimeMillis())
-                        .build()
-                );
-    }
-
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception, HttpServletRequest request) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(ErrorResponse.builder()
-                        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-                        .message(exception.getMessage())
-                        .path(request.getRequestURI())
-                        .status(HttpStatus.NOT_FOUND.value())
+                        .status(exception.getErrorCode().getStatus().value())
                         .timestamp(System.currentTimeMillis())
                         .build()
                 );
