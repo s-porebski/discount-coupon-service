@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ApiBusinessException.class})
     public ResponseEntity<ErrorResponse> handleApiBusinessException(ApiBusinessException exception, HttpServletRequest request) {
         return ResponseEntity
-                .badRequest()
+                .status(exception.getErrorCode().getStatus())
                 .body(ErrorResponse.builder()
                         .error(exception.getErrorCode().getStatus().getReasonPhrase())
                         .message(exception.getErrorCode().getMessage())
