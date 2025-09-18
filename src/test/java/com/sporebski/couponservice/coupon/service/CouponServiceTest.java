@@ -74,7 +74,9 @@ class CouponServiceTest {
             request.setCountryCode("US");
             when(couponRepository.existsByCode("DISCOUNT10")).thenReturn(true);
 
-            assertThrows(ApiBusinessException.class, () -> couponService.createCoupon(request));
+            ApiBusinessException apiBusinessException = assertThrows(ApiBusinessException.class, () -> couponService.createCoupon(request));
+
+            assertEquals(CouponErrorCode.COUPON_CODE_ALREADY_EXISTS, apiBusinessException.getErrorCode());
         }
 
         @Test
@@ -85,7 +87,9 @@ class CouponServiceTest {
             request.setCountryCode("US");
             when(couponRepository.existsByCode("DISCOUNT10")).thenReturn(true);
 
-            assertThrows(ApiBusinessException.class, () -> couponService.createCoupon(request));
+            ApiBusinessException apiBusinessException = assertThrows(ApiBusinessException.class, () -> couponService.createCoupon(request));
+
+            assertEquals(CouponErrorCode.COUPON_CODE_ALREADY_EXISTS, apiBusinessException.getErrorCode());
         }
     }
 
@@ -115,7 +119,9 @@ class CouponServiceTest {
             when(geolocationService.getCountryCode(httpServletRequest.getRemoteAddr())).thenReturn("PL");
             when(couponRepository.incrementUsageIfNotExceeded("DISCOUNT10")).thenReturn(0);
 
-            assertThrows(ApiBusinessException.class, () -> couponService.useCoupon(request, httpServletRequest));
+            ApiBusinessException apiBusinessException = assertThrows(ApiBusinessException.class, () -> couponService.useCoupon(request, httpServletRequest));
+
+            assertEquals(CouponErrorCode.COUPON_USAGE_LIMIT_EXCEEDED, apiBusinessException.getErrorCode());
         }
 
         @Test
@@ -127,7 +133,9 @@ class CouponServiceTest {
             when(couponRepository.findByCode("DISCOUNT10")).thenReturn(Optional.of(coupon));
             when(geolocationService.getCountryCode(httpServletRequest.getRemoteAddr())).thenReturn("US");
 
-            assertThrows(ApiBusinessException.class, () -> couponService.useCoupon(request, httpServletRequest));
+            ApiBusinessException apiBusinessException = assertThrows(ApiBusinessException.class, () -> couponService.useCoupon(request, httpServletRequest));
+
+            assertEquals(CouponErrorCode.COUPON_COUNTRY_NOT_ALLOWED, apiBusinessException.getErrorCode());
         }
 
         @Test
