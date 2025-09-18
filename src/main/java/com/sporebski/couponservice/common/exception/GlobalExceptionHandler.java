@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception, HttpServletRequest request) {
         return ResponseEntity
-                .badRequest()
+                .status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse.builder()
                         .error(HttpStatus.NOT_FOUND.getReasonPhrase())
                         .message(exception.getMessage())
